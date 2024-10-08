@@ -1,2 +1,5 @@
-export * from './lib/async';
-export * from './lib/number';
+import { loader } from './lib/loader.js';
+
+export default loader;
+
+export { loader };

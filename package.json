@@ -5,6 +5,7 @@
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
+  "type": "module",
   "repository": "https://github.com/moghammed/astro-loader-contentful",
   "license": "MIT",
   "keywords": [],
@@ -42,7 +43,10 @@
     "node": ">=10"
   },
   "dependencies": {
-    "@bitauth/libauth": "^1.17.1"
+    "@bitauth/libauth": "^1.17.1",
+    "astro": "^4.15.11",
+    "contentful": "^11.0.3",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@ava/typescript": "^1.1.1",
@@ -66,7 +70,7 @@
     "standard-version": "^9.0.0",
     "ts-node": "^9.0.0",
     "typedoc": "^0.19.0",
-    "typescript": "^4.0.2"
+    "typescript": "^5.6.2"
   },
   "files": [
     "build/main",
