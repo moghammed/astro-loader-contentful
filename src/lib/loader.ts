@@ -105,7 +105,6 @@ export const loader = ({
     load: async (context: LoaderContext) => {
       const entries = await client.getEntries({
         content_type: contentTypeId,
-        include: 10,
       });
 
       entries.items.forEach((item: any) => {
