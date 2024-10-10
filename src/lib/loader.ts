@@ -1,4 +1,9 @@
 import * as contentful from 'contentful';
+import type {
+  EntryCollection,
+  EntrySkeletonType,
+  EntryQueries,
+} from 'contentful';
 
 import type { Loader, LoaderContext } from 'astro/loaders';
 import z from 'zod';
@@ -10,6 +15,7 @@ export type loaderArgs = {
   apiKey: string;
   contentTypeId: string;
   preview: boolean;
+  queryOptions?: EntryQueries<undefined>;
 };
 
 const generateZodSchema = async (
@@ -92,6 +98,7 @@ export const loader = ({
   apiKey,
   contentTypeId,
   preview = false,
+  queryOptions = {},
 }: loaderArgs): Loader => {
   const client = contentful.createClient({
     accessToken: apiKey,
@@ -103,9 +110,11 @@ export const loader = ({
   return {
     name: 'astro-loader-contentful',
     load: async (context: LoaderContext) => {
-      const entries = await client.getEntries({
-        content_type: contentTypeId,
-      });
+      const entries: EntryCollection<EntrySkeletonType> =
+        await client.getEntries({
+          content_type: contentTypeId,
+          ...queryOptions,
+        });
 
       entries.items.forEach((item: any) => {
         context.store.set({
