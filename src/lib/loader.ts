@@ -2,12 +2,14 @@ import * as contentful from 'contentful';
 import type {
   EntryCollection,
   EntrySkeletonType,
-  EntryQueries,
+  ContentfulClientApi,
+  ContentType,
+  ContentTypeField,
+  EntriesQueries,
 } from 'contentful';
 
 import type { Loader, LoaderContext } from 'astro/loaders';
 import z from 'zod';
-import type { ContentTypeField } from 'contentful';
 
 export type loaderArgs = {
   space: string;
@@ -15,16 +17,14 @@ export type loaderArgs = {
   apiKey: string;
   contentTypeId: string;
   preview: boolean;
-  queryOptions?: EntryQueries<undefined>;
+  queryOptions?: EntriesQueries<EntrySkeletonType, unknown>;
 };
 
 const generateZodSchema = async (
-  client: contentful.ContentfulClientApi<undefined>,
+  client: ContentfulClientApi<undefined>,
   contentTypeId: string
 ) => {
-  const contentType: contentful.ContentType = await client.getContentType(
-    contentTypeId
-  );
+  const contentType: ContentType = await client.getContentType(contentTypeId);
   const schemaObj: { [key: string]: any } = {};
 
   contentType.fields.forEach((field: ContentTypeField) => {
@@ -111,7 +111,7 @@ export const loader = ({
     name: 'astro-loader-contentful',
     load: async (context: LoaderContext) => {
       const entries: EntryCollection<EntrySkeletonType> =
-        await client.getEntries({
+        await client.getEntries<EntrySkeletonType>({
           content_type: contentTypeId,
           ...queryOptions,
         });
@@ -122,6 +122,8 @@ export const loader = ({
           data: item.fields,
         });
       });
+
+      return;
     },
     schema: () => generateZodSchema(client, contentTypeId),
   };

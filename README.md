@@ -23,8 +23,10 @@ In `src/content/config.ts`, add collections and use the loader:
 
 ```typescript
 import contentfulLoader from 'astro-loader-contentful';
+import type { Loader } from 'astro/loaders';
 
 const apiKey = 'your-api-key';
+const previewKey = 'your-preview-key'; //this is only needed if you want to show unpublished entries
 const environment = 'master';
 const space = 'your-space';
 
@@ -35,17 +37,20 @@ const pages = defineCollection({
     apiKey,
     space,
     preview: false,
-  }),
+    queryOptions: {
+      limit: 200,
+    },
+  }) as Loader,
 });
 
 const examples = defineCollection({
   loader: contentfulLoader({
     contentTypeId: 'example',
     environment,
-    apiKey,
+    apiKey: previewKey,
     space,
-    preview: false,
-  }),
+    preview: true,
+  }) as Loader,
 });
 
 export const collections = {
